@@ -1,0 +1,21 @@
+const express = require('express');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+mongoose.connect('mongodb://localhost/my-blog', { useMongoClient: true });
+mongoose.Promise = Promise;
+
+const app = express();
+
+app.use(morgan('dev'));
+
+app.use(bodyParser.json());
+
+app.get('/', function(req, res) {
+  res.status(200).send();
+});
+
+app.use('/api/users', require('./routes/users'));
+
+module.exports = app;
