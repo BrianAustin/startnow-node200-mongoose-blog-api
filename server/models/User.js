@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// Creates a new Mongoose Schema with two properties
+// Creates a new Mongoose Schema
 const UserSchema = new Schema({
     firstName: { type: String, required: true},
     lastName: { type: String, required: true },

@@ -12,7 +12,7 @@ app.use(morgan('dev'));
 
 app.use(bodyParser.json());
 
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   res.status(200).send();
 });
 
