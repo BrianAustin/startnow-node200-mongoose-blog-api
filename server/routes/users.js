@@ -26,7 +26,7 @@ router.post('/', (req, res) => {
     user
         .save()
         .then(user => {
-            return res.json(user);
+            return res.status(201).json(user);
             console.log('saved user to DB, POW!!');
         });
 });
