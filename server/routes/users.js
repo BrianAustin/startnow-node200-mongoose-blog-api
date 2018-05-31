@@ -1,24 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Blog = require('../models/Blog');
 
 router.get('/', (req, res) => {
     User
         .find()
         .then(users => {
             res.status(200).json(users);
-            console.log('this is the users path');
-        });
+        }).catch(err => res.status(404).send('bad get'));
 });
 
 router.get('/:id', (req, res) => {
     User
         .findById(req.params.id)
             .then(user => {
-                if (!user) { return res.status(404).end; }
+                if (!user) res.status(404).send();
                 return res.status(200).json(user);
-                console.log('Found the user, yo');
-        });
+        }).catch(err => res.status(404).send('yer get got a problem'));
 });
 
 router.post('/', (req, res) => {
@@ -26,21 +25,27 @@ router.post('/', (req, res) => {
     user
         .save()
         .then(user => {
-            return res.status(201).json(user);
             console.log('saved user to DB, POW!!');
-        });
+            return res.status(201).json(user);
+        }).catch(err => res.status(500).send('naughty post'));
 });
 
 router.put('/:id', (req, res) => {
     User
         .findByIdAndUpdate(req.params.id, (req.body))
-            .then(() => console.log('saved some stuff'));
+            .then(user => {
+                if (!user) res.status(404).send();
+                res.status(204).json(user);
+        }).catch(err => res.status(500).send('naughty put'));
 });
 
 router.delete('/:id', (req, res) => {
     User
         .findByIdAndRemove(req.params.id)
-            .then(() => console.log('removed the user'));
+            .then(user => {
+                if (!user) res.status(404).send();
+                res.status(200).json(user);
+            }).catch(err => res.status(404).send('naughty delete'));
 });
 
 module.exports = router;

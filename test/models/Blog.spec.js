@@ -31,10 +31,12 @@ describe('Blog Model', () => {
 
     it('should correctly establish relationship between User and Blog', (done) => {
         const u = new User(fakeUser);
+        
 
         u
             .save()
             .then(user => {
+                
                 const b = new Blog(fakeBlogs[0]);
 
                 b.author = user._id;
@@ -47,6 +49,9 @@ describe('Blog Model', () => {
                 return Promise.all([user.save(), Promise.resolve(blog)]);
             })
             .then(([user, blog]) => {
+                console.log("Momemnt of truth")
+                console.log(user.blogs.every(b => b._id === blog._id))
+
                 expect(user.blogs.every(b => b._id === blog._id)).to.be.true;
 
                 done();

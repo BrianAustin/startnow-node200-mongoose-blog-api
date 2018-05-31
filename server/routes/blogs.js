@@ -1,23 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const Blog = require('../models/Blog');
+const User = require('../models/User');
 
 router.get('/', (req, res) => {
   Blog
       .find()
       .then(blogs => {
           res.status(200).json(blogs);
-          console.log('this is the blogs path');
-      });
+      }).catch(err => res.status(500).send('bad request'));
 });
 
 router.get('/featured', (req, res) => {
   Blog
-      .find()
-      .where('featured').equals(true)
+      .where('featured', true)
       .then(blogs => {
           res.status(200).json(blogs);
-      });
+      }).catch(err => res.status(500).send('bad request'))
 });
 
 // Test from here on Thursday morning
@@ -25,33 +24,44 @@ router.get('/featured', (req, res) => {
 router.get('/:id', (req, res) => {
   Blog
       .findById(req.params.id)
-          .then(blog => {
-              if (!blog) { return res.status(404).end; }
-              return res.status(200).json(blog);
-              console.log('Found the user, G');
-      });
+        .then(blogs => {
+          if (!blogs) res.status(404).send();
+          res.status(200).json(blogs);
+      }).catch(err => res.status(404))
 });
 
 router.post('/', (req, res) => {
-  var blog = new User(req.body);
-  blog
-      .save()
-      .then(blog => {
-          return res.json(blog);
-          console.log('saved blog to DB, woohoo!!');
-      });
+  let dbUser = null;
+  User
+    .findById(req.body.authorId)
+    .then(user => {
+      dbUser = user;
+      const newBlog = new Blog(req.body);
+      newBlog.author = user._id;
+      return newBlog.save();
+    })
+    .then(blog => {
+      dbUser.blogs.push(blog)
+      dbUser.save().then(() => res.status(201).json(blog));
+      }).catch(err => res.status(500).send('bad'));
 });
 
 router.put('/:id', (req, res) => {
   Blog
       .findByIdAndUpdate(req.params.id, (req.body))
-          .then(() => console.log('saved some things'));
+          .then(blogs => {
+            if (!blogs) return res.status(404).send;
+            res.status(204).json(blogs);
+        }).catch(err => res.status(500).send('bad bad put by id'));
 });
 
 router.delete('/:id', (req, res) => {
   Blog
       .findByIdAndRemove(req.params.id)
-          .then(() => console.log('removed the blog'));
+          .then(blogs => {
+            if (!blogs) return res.status(200).json(blogs);
+            res.status(200).json(blogs);
+          }).catch(err => res.status(404).send('bad delete'));
 });
 
 module.exports = router;
