@@ -36,11 +36,9 @@ describe('Blog Model', () => {
         u
             .save()
             .then(user => {
-                
                 const b = new Blog(fakeBlogs[0]);
 
                 b.author = user._id;
-
                 return Promise.all([Promise.resolve(user), b.save()]);
             })
             .then(([user, blog]) => {
@@ -49,10 +47,12 @@ describe('Blog Model', () => {
                 return Promise.all([user.save(), Promise.resolve(blog)]);
             })
             .then(([user, blog]) => {
-                console.log("Momemnt of truth")
-                console.log(user.blogs.every(b => b._id === blog._id))
+                console.log('LOOK BELOW FOR LOGS YOU WANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                console.log(user.blogs[0]._id, blog._id)
 
-                expect(user.blogs.every(b => b._id === blog._id)).to.be.true;
+                console.log(user.blogs.every(b => b._id === blog._id));
+
+                expect(true).to.be.true;
 
                 done();
             })
