@@ -7,7 +7,8 @@ const createModelExpectations = require('../lib/createModelExpectations');
 const Blog = require('../../server/models/Blog');
 const User = require('../../server/models/User');
 
-describe('Blog Model', () => {
+describe('Blog Model', function() {
+    this.timeout(10000);
     it('should define all the specified fields', () => {
         const b = new Blog(fakeBlogs[0]);
 
@@ -49,10 +50,10 @@ describe('Blog Model', () => {
             .then(([user, blog]) => {
                 console.log('LOOK BELOW FOR LOGS YOU WANT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                 console.log(user.blogs[0]._id, blog._id)
-
+                
                 console.log(user.blogs.every(b => b._id === blog._id));
 
-                expect(true).to.be.true;
+                expect(user.blogs.every(b => b._id === blog._id)).to.be.true;
 
                 done();
             })
