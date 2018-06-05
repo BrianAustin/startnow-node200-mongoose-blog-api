@@ -16,7 +16,7 @@ router.get('/:id', (req, res) => {
         .findById(req.params.id)
             .then(user => {
                 if (!user) res.status(404).send();
-                return res.status(200).json(user);
+                res.status(200).json(user);
         }).catch(err => res.status(404).send('yer get got a problem'));
 });
 
@@ -25,8 +25,7 @@ router.post('/', (req, res) => {
     user
         .save()
         .then(user => {
-            console.log('saved user to DB, POW!!');
-            return res.status(201).json(user);
+            res.status(201).json(user);
         }).catch(err => res.status(500).send('naughty post'));
 });
 

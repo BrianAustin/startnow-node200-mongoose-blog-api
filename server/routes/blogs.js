@@ -19,8 +19,6 @@ router.get('/featured', (req, res) => {
       }).catch(err => res.status(500).send('bad request'))
 });
 
-// Test from here on Thursday morning
-
 router.get('/:id', (req, res) => {
   Blog
       .findById(req.params.id)
@@ -43,7 +41,7 @@ router.post('/', (req, res) => {
     .then(blog => {
       dbUser.blogs.push(blog)
       dbUser.save().then(() => res.status(201).json(blog));
-      }).catch(err => res.status(500).send('bad'));
+      }).catch(err => res.status(500).send('not saved, you could retry, no?'));
 });
 
 router.put('/:id', (req, res) => {
